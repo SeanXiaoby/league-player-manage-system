@@ -22,7 +22,10 @@ class PlayerDataAPI {
     }
 
     // let uri = `mongodb://${this._config.host}:${this._config.port}`;
-    let uri = process.env.mongoURI;
+    let uri =
+      process.env.mongoSource === "atlas"
+        ? process.env.atlas_mongoURI
+        : process.env.local_mongoURI;
 
     // if (queries.length > 0) {
     //   uri += `?${queries.join("&")}`;
