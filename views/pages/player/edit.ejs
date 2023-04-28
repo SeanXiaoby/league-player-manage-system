@@ -45,7 +45,7 @@
     xhr.open('DELETE', `/api/player/${playerId}`);
 
     // Define the function to handle the response
-    xhr.onload = function() {
+    xhr.onload = function () {
       if (xhr.status === 200) {
         alert('Delete succeed!')
         // Redirect the user to the new page
@@ -71,10 +71,10 @@
     console.log(amount_deposit);
 
     // Set the URL and method for the request
-    xhr.open('POST', `/api/deposit/player/${playerId}?amount_usd_cents=${Math.round((amount_deposit * 100))}`);
+    xhr.open('POST', `/api/player/${playerId}/deposit?amount_usd_cents=${Math.round((amount_deposit * 100))}`);
 
     // Define the function to handle the response
-    xhr.onload = function() {
+    xhr.onload = function () {
       if (xhr.status === 200) {
         alert(`Making deposit: ${(amount_deposit)}$ Succeeds!`)
         // Redirect the user to the new page
@@ -106,7 +106,7 @@
     };
 
     // Define the function to handle the response
-    xhr.onload = function() {
+    xhr.onload = function () {
       console.log(xhr.status)
       if (xhr.status === 200) {
         alert('Editting player succeeds!')
@@ -142,23 +142,28 @@
         </h5>
         <h5 class="inputLine">
           <label for="fname">First name:</label>
-          <input type="text" id="fname" name="fname" placeholder="Your first name" disabled="disabled" class="disabledInput">
+          <input type="text" id="fname" name="fname" placeholder="Your first name" disabled="disabled"
+            class="disabledInput">
         </h5>
         <h5 class="inputLine">
           <label for="lname">Last name: </label>
-          <input type="text" id="lname" name="lname" placeholder="Your last name" disabled="disabled" class="disabledInput">
+          <input type="text" id="lname" name="lname" placeholder="Your last name" disabled="disabled"
+            class="disabledInput">
         </h5>
         <h5 class="inputLine">
           <label for="handed">Handed: </label>
-          <input type="text" id="handed" name="handed" placeholder="Left, Right or Ambi" disabled="disabled" class="disabledInput">
+          <input type="text" id="handed" name="handed" placeholder="Left, Right or Ambi" disabled="disabled"
+            class="disabledInput">
         </h5>
         <h5 class="inputLine">
           <label for="balance">Balance: $</label>
-          <input type="number" id="balance" name="amount_usd_cents" placeholder="Your initial balance (cents)" disabled="disabled" class="disabledInput">
+          <input type="number" id="balance" name="amount_usd_cents" placeholder="Your initial balance (cents)"
+            disabled="disabled" class="disabledInput">
         </h5>
         <h5 class="inputLine">
           <label for="active">Status: </label>
-          <input type="text" id="active" name="active" placeholder="Active/Inactive" disabled="disabled" class="disabledInput">
+          <input type="text" id="active" name="active" placeholder="Active/Inactive" disabled="disabled"
+            class="disabledInput">
         </h5>
         <!-- <input type="submit" id="deleteBtn" class="btn" value="Delete Player" />
 
@@ -203,7 +208,8 @@
 
         <h5 class="inputLine">
           <label for="balance">Deposit Amount: $</label>
-          <input type="number" id="edit_balance" name="amount_usd_cents" placeholder="Starting from 0$" class="editableInput">
+          <input type="number" id="edit_balance" name="amount_usd_cents" placeholder="Starting from 0$"
+            class="editableInput">
         </h5>
         <!-- <input type="submit" id="submitBtn" class="btn" value="Make Deposit" />
 
