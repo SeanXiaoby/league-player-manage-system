@@ -76,14 +76,4 @@ router.get("/player/:id/edit.html", async (req, res, next) => {
   });
 });
 
-router.use((req, res, next) => {
-  if (!res.headersSent) {
-    res.locals.status = 404;
-    res.locals.res_content = "My 404 handler...";
-    res.status(404).send("My 404 handler...");
-  }
-
-  next();
-});
-
 module.exports = router;
