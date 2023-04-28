@@ -1,0 +1,115 @@
+<!-- dashboard.ejs -->
+
+<body>
+  <div class="pageContent">
+
+    <%- include("../partials/hero.ejs") %>
+
+    <div class="title" id="overview">
+      <h3>Overview</h3>
+      <div class="underline"></div>
+    </div>
+
+    <div class="stats-board" id="stats-board">
+      <div class="stat-container" id="player-container">
+        <div class="stat-head">
+          <h5>- Total players number -</h5>
+          <h1>
+            <%= stats.players.total_num %>
+          </h1>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-row">
+            <p class="stat-title">active players</p>
+            <p class="stat-content">
+              <%= stats.players.active_num %>
+            </p>
+          </div>
+          <div class="stat-row">
+            <p class="stat-title">In-match players</p>
+            <p class="stat-content">
+              <%= stats.players.in_match_num %>
+            </p>
+          </div>
+          <div class="stat-row">
+            <p class="stat-title">Disqualified players</p>
+            <p class="stat-content">
+              <%= stats.players.dq_num %>
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="stat-container" id="match-container">
+
+        <div class="stat-head">
+          <h5>- Total matches number -</h5>
+          <h1>
+            <%= stats.matches.total_num %>
+          </h1>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-row">
+            <p class="stat-title">On-going matches</p>
+            <p class="stat-content">
+              <%= stats.matches.ongoing_num %>
+            </p>
+          </div>
+          <div class="stat-row">
+            <p class="stat-title">Ended matches</p>
+            <p class="stat-content">
+              <%= stats.matches.ended_num %>
+            </p>
+          </div>
+          <div class="stat-row">
+            <p class="stat-title">Disqualified matches</p>
+            <p class="stat-content">
+              <%= stats.matches.dq_num %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-container" id="other-container">
+        <div class="stat-head">
+          <h5>- Highest prize made -</h5>
+          <h1>$ <%= stats.other.most_prize %>
+          </h1>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-row">
+            <p class="stat-title">Highest points earned</p>
+            <p class="stat-content">
+              <%= stats.other.most_points %>
+            </p>
+          </div>
+          <div class="stat-row">
+            <p class="stat-title">Most balanced made</p>
+            <p class="stat-content">
+              $ <%= stats.other.most_balance %>
+            </p>
+          </div>
+          <div class="stat-row">
+            <p class="stat-title">Players average balance</p>
+            <p class="stat-content">
+              $ <%= stats.other.average_balance %>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+
+<script>
+  document.getElementById("player-container").addEventListener("click", function() {
+    console.log("Clicked")
+    window.location = "/players.html#players";
+  });
+</script>

@@ -1,0 +1,115 @@
+<div class="pageContent">
+  <%- include("../../partials/hero.ejs") %>
+
+  <div class="title" id="players">
+    <h3>Players list</h3>
+    <div class="underline"></div>
+  </div>
+
+  <div class="content" id="demo">
+
+    <% if(!Array.isArray(players) || players.length===0) {%>
+
+    <h3 id="info">There is no Player yet...</h3>
+
+    <%} else {%>
+
+    <input class="search-box" id="search-box">
+
+    <table class="ptable" id="ptable">
+      <tr>
+        <th>#</th>
+        <th>name</th>
+        <th>handed</th>
+        <th>balance</th>
+        <th>Status</th>
+        <th>Operations</th>
+      </tr>
+
+      <% let i=1; for(player of players){ %>
+      <tr>
+        <td>
+          <%= i%>
+        </td>
+        <td>
+          <%= player.name%>
+        </td>
+        <td style="text-transform: capitalize;">
+          <%= player.handed===undefined?'Unknown':player.handed%>
+        </td>
+        <td>
+          $ <%= player.balance_usd_cents===undefined?'Unknown':
+                    Number((player.balance_usd_cents/100).toFixed(2))%>
+        </td>
+        <td style="text-transform: capitalize; color: <%= player.is_active?'green':'red'%>">
+          <%= player.is_active?'active':'inactive'%>
+        </td>
+        <td><a href=<%=`/player/${player.pid}/edit.html`%>>edit</a></td>
+      </tr>
+      <% i++; } }%>
+    </table>
+    <a href="/player/create.html">
+      <button type="button" class="btn">Create Player</button>
+    </a>
+  </div>
+
+
+
+</div>
+
+
+<script>
+  document.getElementById('search-box').addEventListener('keyup', (event) => {
+    const searchQuery = event.target.value;
+    fetch('/api/player/search', {
+        method: 'POST',
+        body: JSON.stringify({
+          q: searchQuery
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+      .then(r => r.json())
+      .then(replacePlayerList); // defined below
+  });
+
+  function replacePlayerList(players) {
+    // Create a new container with the updated player list
+    const newContainer = document.createElement('table');
+    newContainer.classList.add('ptable');
+    newContainer.setAttribute('id', 'ptable');
+    newContainer.innerHTML = `
+      <tr>
+        <th>#</th>
+        <th>name</th>
+        <th>handed</th>
+        <th>balance</th>
+        <th>Status</th>
+        <th>Operations</th>
+      </tr>
+    `;
+
+    let i = 1;
+
+    players.forEach((player) => {
+
+      newContainer.innerHTML += `
+        <tr>
+          <td>${i++}</td>
+          <td>${player.name}</td>
+          <td style="text-transform: capitalize">${player.handed}</td>
+          <td>$ ${Number((player.balance_usd_cents/100).toFixed(2))}</td>
+          <td style="color: ${player.is_active?'green':'red'};text-transform: capitalize">${player.is_active?'active':'inactive'}</td>
+          <td><a href="/player/${player.pid}/edit.html">edit</a></td>
+        </tr>
+      `;
+    });
+
+    // Replace the existing player list with the new container
+
+    const oldContainer = document.querySelector('#ptable');
+
+    oldContainer.parentNode.replaceChild(newContainer, oldContainer);
+  }
+</script>

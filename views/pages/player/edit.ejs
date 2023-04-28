@@ -1,0 +1,224 @@
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const url = new URL(window.location.href);
+    const playerId = url.pathname.split('/')[2];
+
+    return fetch(`/api/player/${playerId}`)
+      .then(r => r.json())
+      .then(data => {
+        document.getElementById('pid').value = playerId;
+        document.getElementById('fname').value = data.name.split(' ')[0];
+        document.getElementById('lname').value = data.name.split(' ')[1] === undefined ? "<Not Set>" : data.name.split(' ')[1];
+        document.getElementById('handed').value = data.handed;
+        document.getElementById('balance').value = Number((data.balance_usd_cents / 100).toFixed(2));
+        document.getElementById('active').value = Boolean(data.is_active) ? 'Active' : "Inactive";
+
+        document.getElementById('edit_lname').value = data.name.split(' ')[1] === undefined ? "" : data.name.split(' ')[1];
+        document.getElementById('edit_active').checked = Boolean(data.is_active);
+        console.log(Boolean(data.is_active));
+        // example, set value for text field
+        // note: just raw data, no "cleanup" for user
+
+        // [...] add more
+        // "id=" attributes uniquely identify elements
+        window.scrollTo(0, 0);
+      })
+      .catch(error => {
+        alert(`Error!! \nDetails: ${error}`);
+        console.log(error);
+        window.location = '/players.html';
+      });
+  });
+</script>
+
+
+<script>
+  const url = new URL(window.location.href);
+  const playerId = url.pathname.split('/')[2];
+
+  const onclickDeltePlayer = () => {
+    console.log('CLicke delete')
+    // Create a new XMLHttpRequest object
+    const xhr = new XMLHttpRequest();
+
+    // Set the URL and method for the request
+    xhr.open('DELETE', `/api/player/${playerId}`);
+
+    // Define the function to handle the response
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        alert('Delete succeed!')
+        // Redirect the user to the new page
+        window.location = '/players.html';
+
+      } else {
+        // Handle errors
+        alert('Deleted fails! Please check player\'s info and try again...')
+        window.location.reload();
+      }
+    }
+    // Send the request
+    if (confirm("Are you sure to DELETE this player?")) {
+      xhr.send();
+    }
+
+  }
+
+  const onclickDeposit = () => {
+    // Create a new XMLHttpRequest object
+    const xhr = new XMLHttpRequest();
+    const amount_deposit = document.getElementById('edit_balance').value;
+    console.log(amount_deposit);
+
+    // Set the URL and method for the request
+    xhr.open('POST', `/api/deposit/player/${playerId}?amount_usd_cents=${Math.round((amount_deposit * 100))}`);
+
+    // Define the function to handle the response
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        alert(`Making deposit: ${(amount_deposit)}$ Succeeds!`)
+        // Redirect the user to the new page
+        window.location.reload();
+        console.log('succeed!');
+
+      } else {
+        // Handle errors
+        alert('Making deposit Failed! Please check your deposit amount and try again later...')
+        window.location.reload();
+      }
+    }
+    // Send the request
+    xhr.send();
+  }
+
+  const onClickEdit = () => {
+    // Create a new XMLHttpRequest object
+    const xhr = new XMLHttpRequest();
+    const edit_lname = document.getElementById('edit_lname').value;
+    const edit_active = document.getElementById('edit_active').checked;
+
+    // Set the URL and method for the request
+    xhr.open('POST', `/api/player/${playerId}`);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    const body = {
+      lname: edit_lname,
+      active: edit_active
+    };
+
+    // Define the function to handle the response
+    xhr.onload = function() {
+      console.log(xhr.status)
+      if (xhr.status === 200) {
+        alert('Editting player succeeds!')
+        // Redirect the user to the new page
+        window.location.reload();
+        console.log('succeed!');
+
+      } else {
+        // Handle errors
+        alert('Editting player Failed! Please check your input and try again...')
+        window.location.reload();
+      }
+    }
+    // Send the request
+    xhr.send(JSON.stringify(body));
+  }
+</script>
+
+<div class="pageContent">
+
+  <div class="content" id="demo">
+
+    <div class="title" id="info">
+      <h3>Player Information</h3>
+      <div class="underline"></div>
+    </div>
+
+    <div class="inputBlock">
+      <form action="/api/player" method="post">
+        <h5 class="inputLine">
+          <label for="pid">Player ID:</label>
+          <input type="text" id="pid" name="pid" disabled="disabled" class="disabledInput">
+        </h5>
+        <h5 class="inputLine">
+          <label for="fname">First name:</label>
+          <input type="text" id="fname" name="fname" placeholder="Your first name" disabled="disabled" class="disabledInput">
+        </h5>
+        <h5 class="inputLine">
+          <label for="lname">Last name: </label>
+          <input type="text" id="lname" name="lname" placeholder="Your last name" disabled="disabled" class="disabledInput">
+        </h5>
+        <h5 class="inputLine">
+          <label for="handed">Handed: </label>
+          <input type="text" id="handed" name="handed" placeholder="Left, Right or Ambi" disabled="disabled" class="disabledInput">
+        </h5>
+        <h5 class="inputLine">
+          <label for="balance">Balance: $</label>
+          <input type="number" id="balance" name="amount_usd_cents" placeholder="Your initial balance (cents)" disabled="disabled" class="disabledInput">
+        </h5>
+        <h5 class="inputLine">
+          <label for="active">Status: </label>
+          <input type="text" id="active" name="active" placeholder="Active/Inactive" disabled="disabled" class="disabledInput">
+        </h5>
+        <!-- <input type="submit" id="deleteBtn" class="btn" value="Delete Player" />
+
+          <input type="hidden" name="redirect" value="/players.html" /> -->
+      </form>
+
+    </div>
+
+
+    <div class="title" id="edit">
+      <h3>Edit Player</h3>
+      <div class="underline"></div>
+    </div>
+
+    <div class="inputBlock">
+
+      <form action="/api/player" method="post">
+
+        <h5 class="inputLine">
+          <label for="lname">Last name: </label>
+          <input type="text" id="edit_lname" name="lname" placeholder="Your last name" class="editableInput">
+        </h5>
+        <h5 class="inputLine">
+          <label for="active">Active: </label>
+          <input type="checkbox" id="edit_active" name="is_active" class="editableInput">
+        </h5>
+
+        <!-- <input type="submit" id="submitBtn" class="btn" value="Submit Edit" />
+
+          <input type="hidden" name="redirect" value="/players.html" /> -->
+      </form>
+      <button class="btn" type="button" onclick="onClickEdit()">Submit Edit</button>
+    </div>
+
+    <div class="title" id="deposit">
+      <h3>Deposit</h3>
+      <div class="underline"></div>
+    </div>
+
+    <div class="inputBlock">
+      <form action="/api/player" method="post">
+
+        <h5 class="inputLine">
+          <label for="balance">Deposit Amount: $</label>
+          <input type="number" id="edit_balance" name="amount_usd_cents" placeholder="Starting from 0$" class="editableInput">
+        </h5>
+        <!-- <input type="submit" id="submitBtn" class="btn" value="Make Deposit" />
+
+          <input type="hidden" name="redirect" value="/players.html" /> -->
+      </form>
+      <button class="btn" type="button" onclick="onclickDeposit()">Make Deposit</button>
+    </div>
+
+    <div class="title" id="delete">
+      <h3>Danger Zone</h3>
+      <div class="underline"></div>
+    </div>
+
+    <button class="btn" type="button" id="deleteBtn" onclick="onclickDeltePlayer()">Delete Player</button>
+
+  </div>
+
+</div>
